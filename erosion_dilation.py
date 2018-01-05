@@ -43,7 +43,7 @@ def morph_opening_closing():
     # make kernel matrix for dilation and erosion (Use Numpy)
     kernel_size_row = 3
     kernel_size_col = 3
-    kernel = np.ones((kernel_size_row, kernel_size_col), np.uint8)
+    kernel = cv2.getStructuringElement(cv2.MORPH_RECT, (kernel_size_row, kernel_size_col))
 
     # opening 적용
     opening_image = cv2.morphologyEx(image, cv2.MORPH_OPEN, kernel)
