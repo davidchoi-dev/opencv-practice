@@ -57,8 +57,39 @@ def draw_contour():
     cv2.destroyAllWindows()
 
 
+
+def approx_contour():
+    filename = 'C:/Users/viva/PycharmProjects/opencv-practice/images/bbox.png'
+    image_origin = cv2.imread(filename)
+    image_copy_grey = cv2.cvtColor(image_origin, cv2.COLOR_BGR2GRAY)  # grey scale 로 복사합니다.
+
+    block_size = 15  # 픽셀에 적용할 threshold값을 계산하기 위한 블럭 크기. 적용될 픽셀이 블럭의 중심이 됨. 따라서 blocksize 는 홀수여야 함
+    subtract_val = 2  # 보정 상수
+    adaptive_gaussian_image = cv2.adaptiveThreshold(image_copy_grey, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+                                                    cv2.THRESH_BINARY, \
+                                                    block_size, subtract_val)
+
+    # =========== find contour ===========
+    # contours는 point의 list형태.
+    # hierarchy는 contours line의 계층 구조
+    # Threshold 적용한 이미지에서 contour 들을 찾아서 contours 변수에 저장하기
+    _, contours, _ = cv2.findContours(adaptive_gaussian_image, cv2.RETR_TREE, cv2.CHAIN_APPROX_NONE)
+
+    approx_contours = []
+    for contour in contours:
+        epsilon = 0.03*cv2.arcLength(contour, True)  # get epsilon
+        approx = cv2.approxPolyDP(contour, epsilon, True)
+        approx_contours.append(approx)  # approx 리스트에 추가
+
+
+    # 찾은 contours 를 원본 이미지에 그리기
+    image_origin = cv2.drawContours(image_origin, approx_contours, -1, (0, 255, 0), 2)
+
+    cv2.imwrite('C:/Users/viva/PycharmProjects/opencv-practice/images/bbox_result.png', image_origin)
+
+
 def main():
-    draw_contour()
+    approx_contour()
     return None
 
 
