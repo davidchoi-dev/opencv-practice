@@ -6,8 +6,14 @@ __author__ = "Wooongje Han"
 from PIL import Image
 from pytesseract import *
 
-def orc_test():
 
+def orc_test():
+    filename = 'images/test3.jpg'
+    image = Image.open(filename)
+    text = image_to_string(image, lang='kor')
+
+    print("================ OCR result ================")
+    print(text)
 
 
 def main():
